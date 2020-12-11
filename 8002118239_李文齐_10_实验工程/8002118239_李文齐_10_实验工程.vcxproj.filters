@@ -42,6 +42,9 @@
     <ClCompile Include="TinyEngine\T_AI.cpp">
       <Filter>TiniyEngine</Filter>
     </ClCompile>
+    <ClCompile Include="TinyEngine\T_Map.cpp">
+      <Filter>TiniyEngine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EngineTest.h">
@@ -75,6 +78,9 @@
       <Filter>TiniyEngine</Filter>
     </ClInclude>
     <ClInclude Include="TinyEngine\T_AI.h">
+      <Filter>TiniyEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="TinyEngine\T_Map.h">
       <Filter>TiniyEngine</Filter>
     </ClInclude>
   </ItemGroup>

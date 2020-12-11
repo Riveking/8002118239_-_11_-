@@ -3,12 +3,13 @@
 // 作者: 万立中(WanLizhong)
 // 博客: www.wanlizhong.com 
 // 日期: 2013-08-02
-// 版权所有 2007-2020 万立中
-// (C) 2007-2020 WanLizhong All Rights Reserved
+// 版权所有 2007-2013 万立中
+// (C) 2007-2013 WanLizhong All Rights Reserved
 //*******************************************************************
 
 #pragma once
 #include "T_Graph.h"
+#include "T_Map.h"
 #include "T_Layer.h"
 #include "T_Util.h"
 
@@ -67,7 +68,7 @@ public:
 	// 构造函数参数说明:
 	// frameWidth和frameHeight值都为0: 角色图像无动画
 	// frameWidth和frameHeight值都大于0: 角色图像包含帧动画
-	T_Sprite(LPCTSTR imgPath, int frameWidth = 0, int frameHeight = 0);
+	T_Sprite(wstring imgPath, int frameWidth = 0, int frameHeight = 0);
 	// 析构函数
 	virtual ~T_Sprite(void);
 	// 获取本类名
@@ -138,7 +139,11 @@ public:
 	// 获得缩放后的实际碰撞检测矩形区域
 	RECT* GetCollideRect();	
 	// 检测角色碰撞, distance检测碰撞的距离
-	bool CollideWith(T_Sprite* target, int distance=0);		
+	bool CollideWith(T_Sprite* target, int distance=0);
+	// 检测地图碰撞
+	bool CollideWith(IN T_Map* map);	
+	// 获取碰撞到障碍时的位置
+	POINT GetMapBlockPT(){ return mapBlockPT; }				
 
 	//……………………………………………………………………………………
 	// 与动画帧相关的操作
@@ -186,6 +191,8 @@ public:
 	int GetDir(POINT mousePT);							
 	// 检查角色是否到达鼠标处
 	bool MoveTo(IN POINT mousePT, IN POINT desPT, IN RECT Boundary);
+	// 检查角色是否到达地图鼠标处
+	bool MoveTo(IN POINT mousePT, IN POINT desPT, IN T_Map* map);	
 
 	//……………………………………………………………………………………
 	// 本类初始化及绘制函数

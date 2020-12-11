@@ -3,8 +3,8 @@
 // 作者: 万立中(WanLizhong)
 // 博客: www.wanlizhong.com 
 // 日期: 2013-08-02
-// 版权所有 2007-2020 万立中
-// (C) 2007-2020 WanLizhong All Rights Reserved
+// 版权所有 2007-2013 万立中
+// (C) 2007-2013 WanLizhong All Rights Reserved
 //*******************************************************************
 
 #include "T_AI.h"
@@ -267,14 +267,19 @@ MoveCoord T_AI::GetMoveCoord(T_Sprite* npc_sp, int dir, int speed, RECT boundary
 // 根据移动方向、速度和指定的活动范围对角色做漫游处理
 void T_AI::Wander(T_Sprite* npc_sp, int npc_dir, int speed, RECT boundary)
 {
+	// 获取当前游戏角色的移动方向和速度计算其下一步的移动信息
 	MoveCoord mRate = GetMoveCoord(npc_sp, npc_dir, speed, boundary);
+	// 如果角色没有到达活动范围的边界
 	if(mRate.BoundDir == -1 )
 	{
+		// 角色继续移动
 		npc_sp->Move(mRate.moveX, mRate.moveY);
 	}
+	// 如果角色到达活动范围的边界
 	if(mRate.BoundDir != -1) 
 	{
 		int r_dir = 0;
+		// 根据角色的移动方向模式抽取一个随机躲避方向
 		if(dir_style == 8) 
 		{
 			r_dir = rand()%5;
@@ -283,10 +288,58 @@ void T_AI::Wander(T_Sprite* npc_sp, int npc_dir, int speed, RECT boundary)
 		{
 			r_dir = rand()%3;
 		}
+		// 将角色定位在边界
 		npc_sp->SetPosition(mRate.oldX, mRate.oldY);
+		// 为角色设置新的移动方向
 		npc_sp->SetDir(EvadeDir[mRate.BoundDir][r_dir]);
 	}
 }
+
+// 根据移动方向、速度和指定的地图对象对角色做漫游处理
+void T_AI::Wander(T_Sprite* npc_sp, int npc_dir, int speed, T_Map* map)
+{
+	// 计算游戏地图的矩形范围
+	RECT mapBound;
+	mapBound.left = map->GetX();
+	mapBound.top = map->GetY();
+	mapBound.right = map->GetX()+map->GetWidth();
+	mapBound.bottom = map->GetY()+map->GetHeight();
+
+	// 获取当前游戏角色的移动方向和速度计算其下一步的移动信息
+	MoveCoord mRate = GetMoveCoord(npc_sp, npc_dir, speed, mapBound);
+	
+	// 根据角色的移动的方向模式抽取一个随机躲避方向
+	int r_dir = 0;
+	if(dir_style == 8) 
+	{
+		r_dir = rand()%5;
+	}
+	else
+	{
+		r_dir = rand()%3;
+	}
+	
+	// 如果角色没有到达游戏地图的边界
+	if(mRate.BoundDir == -1 )
+	{
+		npc_sp->Move(mRate.moveX, mRate.moveY);
+	}
+	// 如果角色已经到达游戏地图的边界
+	if(mRate.BoundDir != -1) 
+	{
+		npc_sp->SetPosition(mRate.oldX, mRate.oldY);
+		npc_sp->SetDir(EvadeDir[mRate.BoundDir][r_dir]);
+	}
+	if(npc_sp->CollideWith(map)) 
+	{
+		// 将角色定位在边界
+		npc_sp->SetPosition(mRate.oldX, mRate.oldY);
+		// 为角色设置新的移动方向（朝其它3个方向躲避）
+		npc_sp->SetDir(EvadeDir[npc_sp->GetDir()][rand()%3]);
+	}
+}
+
+
 
 // 角色躲避处理，第一个参数为躲避的对象，第二个参数为要回避的检测对象
 void T_AI::Evade(T_Sprite* npc_sp, T_Sprite* player)

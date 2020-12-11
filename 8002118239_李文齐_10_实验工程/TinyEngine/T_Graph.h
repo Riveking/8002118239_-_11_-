@@ -3,8 +3,9 @@
 // 作者: 万立中(WanLizhong)
 // 博客: www.wanlizhong.com 
 // 日期: 2013-08-02
-// 版权所有 2007-2013 万立中
-// (C) 2007-2013 WanLizhong All Rights Reserved
+// 更新: 2018-12-13
+// 版权所有 2007-2018 万立中
+// (C) 2007-2018 WanLizhong All Rights Reserved
 //*******************************************************************
 
 #pragma once
@@ -19,9 +20,8 @@ protected:
 
 public:
 	T_Graph();					// T_Graph类默认构造函数
-	T_Graph(LPTSTR fileName);	// 使用指定文件创建T_Graph对象
-	T_Graph(HINSTANCE hInst, int pngResID);	  // 使用PNG格式的资源ID创建T_Graph对象
-	virtual ~T_Graph();			 // T_Graph类的析构函数
+	T_Graph(wstring fileName);	// 使用指定文件创建T_Graph对象
+	virtual ~T_Graph();			// T_Graph类的析构函数
 
 	HBITMAP GetBmpHandle(){ return hBmp; }		// 获得已加载图像句柄
 	int GetImageWidth(){ return ImageWidth; }	// 获得已加载图像宽
@@ -29,8 +29,7 @@ public:
 	
 public:
 	// 加载图像(支持BMP, GIF, JPEG, PNG, TIFF等格式)
-	bool LoadImageFile(LPCTSTR path);		
-	bool LoadPngImageRes(HINSTANCE hInst, UINT pngResID);
+	bool LoadImageFile(wstring path);
 
 	void PaintImage(HDC hdc, int x, int y);
 	void PaintImage(HDC hdc, int x, int y, int width, int height);
@@ -38,7 +37,6 @@ public:
 	
 	void Destroy();	// 释放资源
 public:
-	static bool LoadPngResource(HINSTANCE hInst, UINT nID, Bitmap *&pImg);
 	static HBITMAP CreateBlankBitmap(int width, int height, COLORREF color);
 
 	// 把HBITMAP句柄转换为Bitmap类对象的函数
@@ -70,16 +68,16 @@ public:
 		                   int FrameCount, int RowFrames, int wFrame, int hFrame, 
 		                   float ratio=1, int rotType=0, BYTE alpha=255);
 
-	static void PaintText(HDC hdc, RectF fontRect, LPCTSTR text, 
-		                  REAL fontSize, LPCTSTR fontName, 
-		                  Color fontColor = Color::White,
-						  FontStyle style = FontStyleBold, 
-						  StringAlignment align = StringAlignmentCenter);
 
 	static void PaintBlank(HBITMAP hbmp, int width, int height, COLORREF crColor);
 	static void PaintBlank(HDC hdc, int x, int y, 
-						   int width, int height, Color crColor);
+		                   int width, int height, Color crColor);
 	static void PaintBlank(HDC hdc, int x, int y, int width, int height, 
-						   COLORREF crColor, int alpLevel);
+		                   COLORREF crColor, int alpLevel);
 
+	static void PaintText(HDC hdc, RectF fontRect, wstring text,
+		                  REAL fontSize, wstring fontName,
+		                  Color fontColor = Color::White,
+						  FontStyle style = FontStyleBold, 
+						  StringAlignment align = StringAlignmentCenter);
 };

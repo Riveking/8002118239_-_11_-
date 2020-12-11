@@ -75,6 +75,7 @@ public:
 	void SubKeyAction(WPARAM wParam);
 
 	void SetBackColor(COLORREF bkcolor);// 更新: 2019-10-11(改变缓冲位图背景色)
+	HDC GetBufferDC(){ return bufferDC; }
 
 	// 被系统自动调用的回调函数
 	static LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, 

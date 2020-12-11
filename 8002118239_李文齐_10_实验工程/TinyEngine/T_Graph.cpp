@@ -3,8 +3,9 @@
 // 作者: 万立中(WanLizhong)
 // 博客: www.wanlizhong.com 
 // 日期: 2013-08-02
-// 版权所有 2007-2013 万立中
-// (C) 2007-2013 WanLizhong All Rights Reserved
+// 更新: 2018-12-13
+// 版权所有 2007-2018 万立中
+// (C) 2007-2018 WanLizhong All Rights Reserved
 //*******************************************************************
 
 #include "T_Graph.h"
@@ -18,20 +19,15 @@ T_Graph::T_Graph()
 }
 
 // T_Graph类构造函数，使用指定的文件来创建一个HBITMAP对象
-T_Graph::T_Graph(LPTSTR fileName)
+T_Graph::T_Graph(wstring fileName)
 {
 	LoadImageFile(fileName);
-}
-
-T_Graph::T_Graph(HINSTANCE hInst, int pngResID)
-{
-	LoadPngImageRes(hInst, pngResID);
 }
 
 // T_Graph类析构函数
 T_Graph::~T_Graph()
 {
-	
+	Destroy();
 }
 
 // T_Graph类释放资源的方法
@@ -45,9 +41,9 @@ void T_Graph::Destroy()
 	}
 }
 
-bool T_Graph::LoadImageFile(LPCTSTR path)
+bool T_Graph::LoadImageFile(wstring path)
 {
-	Bitmap* pBmp = Bitmap::FromFile(path);
+	Bitmap* pBmp = Bitmap::FromFile(path.c_str());
 	if(!pBmp) return false;
 
 	ImageWidth = pBmp->GetWidth();
@@ -70,47 +66,6 @@ bool T_Graph::LoadImageFile(LPCTSTR path)
 		return false;
 	}
 }
-
-bool T_Graph::LoadPngImageRes(HINSTANCE hInst, UINT pngResID)
-{
-	Bitmap* pBmp = NULL;
-	LoadPngResource(hInst, pngResID, pBmp);
-	Status status = pBmp->GetHBITMAP(NULL, &hBmp);
-	if (status != S_OK)
-	{
-		hBmp = NULL;
-		return false;
-	}
-	ImageWidth = pBmp->GetWidth();
-	ImageHeight = pBmp->GetHeight();
-	delete pBmp;
-	return true;
-}
-
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-bool T_Graph::LoadPngResource(HINSTANCE hInst, UINT nID, Bitmap *& pImg)
-{
-	HRSRC hRsrc = FindResource(hInst, MAKEINTRESOURCE(nID), L"PNG");
-	if (!hRsrc) return FALSE;
-	// load resource into memory 
-	DWORD len = SizeofResource(hInst, hRsrc);
-	BYTE* lpRsrc = (BYTE*)LoadResource(hInst, hRsrc);
-	if (!lpRsrc) return FALSE;
-	// Allocate global memory on which to create stream 
-	HGLOBAL m_hMem = GlobalAlloc(GMEM_FIXED, len);
-	BYTE* pmem = (BYTE*)GlobalLock(m_hMem);
-	memcpy(pmem, lpRsrc, len);
-	GlobalUnlock(m_hMem);
-	IStream* pstm;
-	CreateStreamOnHGlobal(m_hMem, FALSE, &pstm);
-	// load from stream 
-	pImg = Gdiplus::Bitmap::FromStream(pstm);
-	pstm->Release();
-	FreeResource(lpRsrc);
-	GlobalFree(m_hMem);
-	return TRUE;
-}
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 HBITMAP T_Graph::CreateBlankBitmap(int width, int height, COLORREF color)
 {
@@ -154,8 +109,6 @@ Bitmap* T_Graph::HBITMAP_To_Bitmap(HBITMAP hbmp, HDC hdc)
 	BmpCpy->LockBits(&rect, ImageLockModeWrite, PixelFormat32bppPARGB, &bmpData);
 
 	// 计算出位图每行像素数，并将指针指向首行
-	// 对于RGB图，一个像素占24个bit，即3个字节表示一个像素
-	// 此处处理ARGB模式的图，一个像素占32个bit，即4个字节表示一个像素
 	int lineSize = width * 4;
 	byte* cpyBytes = (byte*)(bmpData.Scan0);
 	// 按照位图的高逐行拷贝像素数据至缓冲区
@@ -371,31 +324,11 @@ void T_Graph::PaintFrame( HBITMAP in_hbitmap, HDC destDC, int destX, int destY,
 						  int FrameCount, int RowFrames, int wFrame, int hFrame,
 						  float ratio, int rotType, BYTE alpha)
 {
-
 	int col=FrameCount%RowFrames;
 	int row = (FrameCount-col)/RowFrames;
 	PaintRegion(in_hbitmap, destDC, destX, destY, 
 		        col*wFrame, row*hFrame, wFrame, hFrame, 
 				ratio, rotType, alpha);
-}
-
-void T_Graph::PaintText(HDC hdc, RectF fontRect, LPCTSTR text, REAL fontSize, 
-						LPCTSTR fontName, Color fontColor, FontStyle style, 
-						StringAlignment align)
-{
-	//使用GDI方法进行绘制
-	Graphics graph(hdc);
-	FontFamily fontFamily(fontName);
-	Font font(&fontFamily, fontSize, style, UnitPoint);
-
-	StringFormat format;
-	format.SetLineAlignment(StringAlignmentCenter);
-	format.SetAlignment(align);
-	SolidBrush  solidBrush1(fontColor);
-
-	graph.SetTextRenderingHint(TextRenderingHintAntiAlias);
-	graph.DrawString(text, (INT)wcslen(text), &font, fontRect, &format, &solidBrush1);
-	graph.ReleaseHDC(hdc);
 }
 
 void T_Graph::PaintBlank(HDC hdc, int x, int y, int width, int height, Color crColor)
@@ -414,7 +347,7 @@ void T_Graph::PaintBlank(HDC hdc, int x, int y, int width, int height, COLORREF 
 	HBITMAP OldBmp = (HBITMAP)SelectObject(memdc, hbitmap);
 
 	HBRUSH hBrush = CreateSolidBrush(crColor);
-	RECT rcBitmap = { 0, 0, width, height };
+	RECT rcBitmap = { x, y, width, height };
 	FillRect(memdc, &rcBitmap, hBrush);
 
 	BLENDFUNCTION frame_bf;
@@ -459,4 +392,23 @@ void T_Graph::PaintBlank(HBITMAP hbmp, int width, int height, COLORREF crColor)
 	OldBmp = NULL;
 	// 删除笔刷
 	DeleteObject(hBrush);
+}
+
+void T_Graph::PaintText(HDC hdc, RectF fontRect, wstring text, REAL fontSize, 
+	wstring fontName, Color fontColor, FontStyle style,
+						StringAlignment align)
+{
+	//使用GDI方法进行绘制
+	Gdiplus::Graphics graph(hdc);
+	FontFamily fontFamily(fontName.c_str());
+	Font font(&fontFamily, fontSize, style, UnitPoint);
+
+	StringFormat format;
+	format.SetLineAlignment(StringAlignmentCenter);
+	format.SetAlignment(align);
+	SolidBrush  solidBrush1(fontColor);
+
+	graph.SetTextRenderingHint(TextRenderingHintAntiAlias);
+	graph.DrawString(text.c_str(), (INT)(text.length()), &font, fontRect, &format, &solidBrush1);
+	graph.ReleaseHDC(hdc);
 }

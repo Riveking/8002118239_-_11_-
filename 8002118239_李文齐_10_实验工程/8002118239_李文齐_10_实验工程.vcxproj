@@ -68,7 +68,10 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <CodeAnalysisRuleSet>D:\Program Files (x86)\Microsoft Visual Studio 14.0\Team Tools\Static Analysis Tools\Rule Sets\NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -82,6 +85,8 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <BufferSecurityCheck>false</BufferSecurityCheck>
+      <PreprocessorDefinitions>UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <EnablePREfast>false</EnablePREfast>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -116,6 +121,7 @@
     <ClCompile Include="TinyEngine\T_Display.cpp" />
     <ClCompile Include="TinyEngine\T_Engine.cpp" />
     <ClCompile Include="TinyEngine\T_Graph.cpp" />
+    <ClCompile Include="TinyEngine\T_Map.cpp" />
     <ClCompile Include="TinyEngine\T_Menu.cpp" />
     <ClCompile Include="TinyEngine\T_Sprite.cpp" />
     <ClCompile Include="TinyEngine\T_Util.cpp" />
@@ -129,6 +135,7 @@
     <ClInclude Include="TinyEngine\T_Engine.h" />
     <ClInclude Include="TinyEngine\T_Graph.h" />
     <ClInclude Include="TinyEngine\T_Layer.h" />
+    <ClInclude Include="TinyEngine\T_Map.h" />
     <ClInclude Include="TinyEngine\T_Menu.h" />
     <ClInclude Include="TinyEngine\T_Sprite.h" />
     <ClInclude Include="TinyEngine\T_Util.h" />
