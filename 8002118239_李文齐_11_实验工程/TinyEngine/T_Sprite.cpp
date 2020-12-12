@@ -140,6 +140,7 @@ bool T_Sprite::LoopFrameOnce(bool ahead)
 	return true;
 }
 
+
 void T_Sprite::Draw(HDC hdc)
 {
 	int frmIndex = 0;

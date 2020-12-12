@@ -22,6 +22,7 @@
     <ProjectGuid>{83B709B7-D988-496D-A15D-5DF9D246AEBC}</ProjectGuid>
     <RootNamespace>My8002118239_李文齐_软工1809（实验九）</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <ProjectName>8002118239_李文齐_11_实验工程</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

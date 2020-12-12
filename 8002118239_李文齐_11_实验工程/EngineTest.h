@@ -79,7 +79,7 @@ private:
 	static const int NPC_NUM = 10;
 	static const int MAP_ROWS = 24;//µØÍ¼Í¼¿é×ÜÐÐÊý
 	static const int MAP_COLS = 32;//µØÍ¼Í¼¿é×ÜÁÐÊý
-	static const int MAP_BKG = 34;//±³¾°Í¼¿é±àºÅ
+	static const int MAP_BKG = 30;//±³¾°Í¼¿é±àºÅ
 	static const int TILE_WIDTH = 32;//Í¼¿é¿í
 	static const int TILE_HEIGHT = 32;//Í¼¿é¸ß
 	static const int BARRIER[MAP_ROWS*MAP_COLS];//µØÍ¼ÕÏ°­Í¼²ãÊý¾Ý
